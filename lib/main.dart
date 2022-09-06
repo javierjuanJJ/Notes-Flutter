@@ -61,42 +61,48 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text('Register'),
       ),
-      body: Column(children: [
-        TextField(
-          enableSuggestions: false,
-          keyboardType: TextInputType.emailAddress,
-          autocorrect: false,
-          controller: _email,
-          decoration: const InputDecoration(
-            hintText: 'Enter your email here'
-          ),
-        ),
-        TextField(
-          controller: _password,
-          obscureText: true,
-          enableSuggestions: false,
-          autocorrect: false,
-          decoration: const InputDecoration(
-              hintText: 'Enter your password here'
-          ),
-        ),
-        TextButton(onPressed: () async {
-          final email = _email.text;
-          final password = _password.text;
+      body: FutureBuilder(
+          builder : (context, snapshot) {
+              return Column(
+                children: [
+                  TextField(
+                    enableSuggestions: false,
+                    keyboardType: TextInputType.emailAddress,
+                    autocorrect: false,
+                    controller: _email,
+                    decoration: const InputDecoration(
+                        hintText: 'Enter your email here'
+                    ),
+                  ),
+                  TextField(
+                    controller: _password,
+                    obscureText: true,
+                    enableSuggestions: false,
+                    autocorrect: false,
+                    decoration: const InputDecoration(
+                        hintText: 'Enter your password here'
+                    ),
+                  ),
+                  TextButton(onPressed: () async {
+                    final email = _email.text;
+                    final password = _password.text;
 
-          await Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform,
-          );
+                    await Firebase.initializeApp(
+                      options: DefaultFirebaseOptions.currentPlatform,
+                    );
 
-          final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: email,
-              password: password
-          );
+                    final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                        email: email,
+                        password: password
+                    );
 
-          print(userCredential);
+                    print(userCredential);
 
-        }, child: const Text('Register'),
-        )]
+                  }, child: const Text('Register'),
+                  )
+                ],
+              );
+          },
       ) ,
     );
   }
