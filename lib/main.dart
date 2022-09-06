@@ -82,9 +82,11 @@ class _HomePageState extends State<HomePage> {
         TextButton(onPressed: () async {
           final email = _email.text;
           final password = _password.text;
+
           await Firebase.initializeApp(
             options: DefaultFirebaseOptions.currentPlatform,
           );
+
           final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
               email: email,
               password: password
