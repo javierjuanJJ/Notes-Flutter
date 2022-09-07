@@ -66,13 +66,32 @@ class _LoginViewState extends State<LoginView> {
                       final email = _email.text;
                       final password = _password.text;
 
-                      final userCredential = await FirebaseAuth.instance
-                          .signInWithEmailAndPassword(
-                              email: email,
-                              password: password
-                            );
+                      try {
+                        final userCredential = await FirebaseAuth.instance
+                            .signInWithEmailAndPassword(
+                            email: email,
+                            password: password
+                        );
 
-                      print(userCredential);
+                        print(userCredential);
+                      }
+                      on FirebaseAuthException catch (e){
+                        print('Something bad happened');
+                        print(e.code);
+
+                        if (e.code == 'user-not-found'){
+                          print('User not found');
+                        }
+
+                        print(e);
+                      }
+                      catch (e){
+                        print('Something bad happened');
+                        print(e.runtimeType);
+                        print(e);
+                      }
+
+
                     },
                     child: const Text('Login'),
                   )
