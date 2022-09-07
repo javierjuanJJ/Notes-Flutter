@@ -6,8 +6,10 @@ import 'package:notes/views/register_view.dart';
 import 'package:notes/views/verify_email_view.dart';
 
 import 'firebase_options.dart';
+import 'dart:developer' as devtools show log;
 
 void main() {
+
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MaterialApp(
     title: 'Flutter Demo',
@@ -84,6 +86,7 @@ class _NotesViewState extends State<NotesView> {
         actions: [
           PopupMenuButton<MenuAction>(
             onSelected: (value) {
+              devtools.log(value.toString());
               print(value);
             },
             itemBuilder: (context) {
