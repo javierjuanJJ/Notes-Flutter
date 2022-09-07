@@ -51,12 +51,12 @@ class _HomePageState extends State<HomePage> {
             final user = FirebaseAuth.instance.currentUser;
             if (user != null) {
               if (user.emailVerified) {
-                print('User verified');
+                return const NotesView();
               } else {
-                return VerifyEmailView();
+                return const VerifyEmailView();
               }
             } else {
-              return LoginView();
+              return const LoginView();
             }
 
             return const Text('Done.');
@@ -66,6 +66,25 @@ class _HomePageState extends State<HomePage> {
             break;
         }
       },
+    );
+  }
+}
+
+class NotesView extends StatefulWidget {
+  const NotesView({Key? key}) : super(key: key);
+
+  @override
+  State<NotesView> createState() => _NotesViewState();
+}
+
+class _NotesViewState extends State<NotesView> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Main UI'),
+      ),
+      body: const Text('Hellow world'),
     );
   }
 }
