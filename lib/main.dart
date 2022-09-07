@@ -52,16 +52,11 @@ class _HomePageState extends State<HomePage> {
 
               if (user?.emailVerified ?? false) {
                 print('You are a verified user');
-                //
+                return const Text('Done');
               } else {
                 print('You need verify yoru user first');
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => VerifyEmailView(),
-                ));
+                return VerifyEmailView();
               }
-
-              return const Text('Done');
-
               break;
             default:
               return Text('Loading');
@@ -83,23 +78,18 @@ class VerifyEmailView extends StatefulWidget {
 class _VerifyEmailViewState extends State<VerifyEmailView> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Verify email'),
-      ),
-      body: Column(
-        children: [
-          Text('Please verify your email address'),
-          TextButton(
-            onPressed: () async {
-              final user = FirebaseAuth.instance.currentUser;
-              await user?.sendEmailVerification();
-            },
-            child: Text('Send email verification'),
-          ),
-        ],
+    return Column(
+      children: [
+        Text('Please verify your email address'),
+        TextButton(
+          onPressed: () async {
+            final user = FirebaseAuth.instance.currentUser;
+            await user?.sendEmailVerification();
+          },
+          child: Text('Send email verification'),
+        ),
+      ],
 
-      ),
     );
   }
 }
