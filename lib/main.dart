@@ -1,3 +1,5 @@
+import 'dart:developer' as devtools show log;
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -6,10 +8,8 @@ import 'package:notes/views/register_view.dart';
 import 'package:notes/views/verify_email_view.dart';
 
 import 'firebase_options.dart';
-import 'dart:developer' as devtools show log;
 
 void main() {
-
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MaterialApp(
     title: 'Flutter Demo',
@@ -86,14 +86,15 @@ class _NotesViewState extends State<NotesView> {
         actions: [
           PopupMenuButton<MenuAction>(
             onSelected: (value) async {
-              switch (value){
-
+              switch (value) {
                 case MenuAction.logout:
                   final dialog = await showLogOutDialog(context);
                   devtools.log(dialog.toString());
 
-                  if(dialog){
+                  if (dialog) {
                     await FirebaseAuth.instance.signOut();
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil('/login/', (_) => false);
                   }
 
                   break;
@@ -117,19 +118,28 @@ class _NotesViewState extends State<NotesView> {
   }
 }
 
-Future<bool> showLogOutDialog(BuildContext context){
-  return showDialog(context: context, builder: (context) {
-    return AlertDialog(
-      title: const Text('Sign out'),
-      content: const Text('Are you sure you want to sign out?') ,
-      actions: [
-        TextButton(onPressed: () {
-          Navigator.of(context).pop(false);
-        },child: const Text('Cancel'),),
-        TextButton(onPressed: () {
-          Navigator.of(context).pop(true);
-        },child: const Text('Sign out'),),
-      ],
-    );
-  },).then((value) => value ?? false);
+Future<bool> showLogOutDialog(BuildContext context) {
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text('Sign out'),
+        content: const Text('Are you sure you want to sign out?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(false);
+            },
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(true);
+            },
+            child: const Text('Sign out'),
+          ),
+        ],
+      );
+    },
+  ).then((value) => value ?? false);
 }
