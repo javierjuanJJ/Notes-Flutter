@@ -22,7 +22,7 @@ void main() {
       // is not restarted.
       primarySwatch: Colors.blue,
     ),
-    home: RegisterView(),
+    home: const LoginView(),
   ));
 }
 
