@@ -55,11 +55,13 @@ class _LoginViewState extends State<LoginView> {
               final password = _password.text;
 
               try {
-                final userCredential = await FirebaseAuth.instance
+                await FirebaseAuth.instance
                     .signInWithEmailAndPassword(email: email, password: password);
 
-                print(userCredential);
-                devtools.log(userCredential.toString());
+
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/notes/', (route) => false);
+
               } on FirebaseAuthException catch (e) {
                 print('Something bad happened');
                 print(e.code);
