@@ -58,12 +58,8 @@ class _HomePageState extends State<HomePage> {
             } else {
               return const LoginView();
             }
-
-            return const Text('Done.');
-            break;
           default:
             return const CircularProgressIndicator();
-            break;
         }
       },
     );
