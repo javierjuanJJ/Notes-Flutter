@@ -106,10 +106,10 @@ class _RegisterViewState extends State<RegisterView> {
                         print(e.code);
 
                         if (e.code == 'weak-password'){
-                          print('Wrong password');
+                          print('Weak password');
                         }
                         else if (e.code == 'email-already-in-use'){
-                          print('Wrong password');
+                          print('Email alreasy in use');
                         }
 
                         print(e);
