@@ -37,7 +37,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home Page'),
@@ -51,13 +50,18 @@ class _HomePageState extends State<HomePage> {
             case ConnectionState.done:
               final user = FirebaseAuth.instance.currentUser;
 
-              if (user?.emailVerified ?? false){
+              if (user?.emailVerified ?? false) {
                 print('You are a verified user');
-              }
-              else {
+                //
+              } else {
                 print('You need verify yoru user first');
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => VerifyEmailView(),
+                ));
               }
-              return Text('Done.');
+
+              return const Text('Done');
+
               break;
             default:
               return Text('Loading');
@@ -69,4 +73,20 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+class VerifyEmailView extends StatefulWidget {
+  const VerifyEmailView({Key? key}) : super(key: key);
 
+  @override
+  State<VerifyEmailView> createState() => _VerifyEmailViewState();
+}
+
+class _VerifyEmailViewState extends State<VerifyEmailView> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Verify email'),
+      ),
+    );
+  }
+}
