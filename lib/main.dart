@@ -31,6 +31,8 @@ void main() {
   ));
 }
 
+enum MenuAction { logout }
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -79,6 +81,21 @@ class _NotesViewState extends State<NotesView> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Main UI'),
+        actions: [
+          PopupMenuButton<MenuAction>(
+            onSelected: (value) {
+              print(value);
+            },
+            itemBuilder: (context) {
+              return const [
+                PopupMenuItem<MenuAction>(
+                  value: MenuAction.logout,
+                  child: Text('Log Out'),
+                )
+              ];
+            },
+          )
+        ],
       ),
       body: const Text('Hellow world'),
     );
