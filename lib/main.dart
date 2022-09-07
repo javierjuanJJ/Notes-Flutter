@@ -21,9 +21,27 @@ void main() {
       // is not restarted.
       primarySwatch: Colors.blue,
     ),
-    home: HomePage(),
+    home: RegisterView(),
   ));
 }
+
+
+class RegisterView extends StatefulWidget {
+  const RegisterView({Key? key}) : super(key: key);
+
+  @override
+  State<RegisterView> createState() => _RegisterViewState();
+}
+
+class _RegisterViewState extends State<RegisterView> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+
+    );
+  }
+}
+
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
