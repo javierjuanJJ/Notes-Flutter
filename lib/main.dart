@@ -26,7 +26,6 @@ void main() {
   ));
 }
 
-
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
 
@@ -35,7 +34,6 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
-
   late final TextEditingController _email;
   late final TextEditingController _password;
 
@@ -53,7 +51,6 @@ class _RegisterViewState extends State<RegisterView> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,9 +62,7 @@ class _RegisterViewState extends State<RegisterView> {
           options: DefaultFirebaseOptions.currentPlatform,
         ),
         builder: (context, snapshot) {
-
-          switch(snapshot.connectionState){
-
+          switch (snapshot.connectionState) {
             case ConnectionState.done:
               return Column(
                 children: [
@@ -76,16 +71,16 @@ class _RegisterViewState extends State<RegisterView> {
                     keyboardType: TextInputType.emailAddress,
                     autocorrect: false,
                     controller: _email,
-                    decoration:
-                    const InputDecoration(hintText: 'Enter your email here'),
+                    decoration: const InputDecoration(
+                        hintText: 'Enter your email here'),
                   ),
                   TextField(
                     controller: _password,
                     obscureText: true,
                     enableSuggestions: false,
                     autocorrect: false,
-                    decoration:
-                    const InputDecoration(hintText: 'Enter your password here'),
+                    decoration: const InputDecoration(
+                        hintText: 'Enter your password here'),
                   ),
                   TextButton(
                     onPressed: () async {
@@ -93,34 +88,33 @@ class _RegisterViewState extends State<RegisterView> {
                       final password = _password.text;
 
                       try {
-
                         final userCredential = await FirebaseAuth.instance
                             .createUserWithEmailAndPassword(
-                            email: email, password: password);
+                                email: email, password: password);
 
                         print(userCredential);
-
-                      }
-                      on FirebaseAuthException catch (e){
+                      } on FirebaseAuthException catch (e) {
                         print('Something bad happened');
                         print(e.code);
 
-                        if (e.code == 'weak-password'){
-                          print('Weak password');
-                        }
-                        else if (e.code == 'email-already-in-use'){
-                          print('Email alreasy in use');
+                        switch (e.code) {
+                          case 'weak-password':
+                            print('Weak password');
+                            break;
+                          case 'email-already-in-use':
+                            print('Email alreasy in use');
+                            break;
+                          case 'invalid-email':
+                            print('Invalid email');
+                            break;
                         }
 
                         print(e);
-                      }
-                      catch (e){
+                      } catch (e) {
                         print('Something bad happened');
                         print(e.runtimeType);
                         print(e);
                       }
-
-
                     },
                     child: const Text('Register'),
                   )
@@ -128,7 +122,8 @@ class _RegisterViewState extends State<RegisterView> {
               );
               break;
             default:
-              return Text('Loading'); break;
+              return Text('Loading');
+              break;
           }
 
           ;
@@ -136,8 +131,4 @@ class _RegisterViewState extends State<RegisterView> {
       ),
     );
   }
-
 }
-
-
-
