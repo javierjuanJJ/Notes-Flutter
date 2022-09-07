@@ -23,7 +23,42 @@ void main() {
       // is not restarted.
       primarySwatch: Colors.blue,
     ),
-    home: const LoginView(),
+    home: const HomePage(),
   ));
 }
+
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Home Page'),
+      ),
+      body: FutureBuilder(
+        future: Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        ),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.done:
+              return Text('Done.');
+              break;
+            default:
+              return Text('Loading');
+              break;
+          }
+        },
+      ),
+    );
+  }
+}
+
 
