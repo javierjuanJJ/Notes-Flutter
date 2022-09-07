@@ -30,61 +30,64 @@ class _RegisterViewState extends State<RegisterView> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextField(
-          enableSuggestions: false,
-          keyboardType: TextInputType.emailAddress,
-          autocorrect: false,
-          controller: _email,
-          decoration: const InputDecoration(
-              hintText: 'Enter your email here'),
-        ),
-        TextField(
-          controller: _password,
-          obscureText: true,
-          enableSuggestions: false,
-          autocorrect: false,
-          decoration: const InputDecoration(
-              hintText: 'Enter your password here'),
-        ),
-        TextButton(
-          onPressed: () async {
-            final email = _email.text;
-            final password = _password.text;
+    return Scaffold(
+      appBar: AppBar(title: const Text('Register')),
+      body: Column(
+        children: [
+          TextField(
+            enableSuggestions: false,
+            keyboardType: TextInputType.emailAddress,
+            autocorrect: false,
+            controller: _email,
+            decoration: const InputDecoration(
+                hintText: 'Enter your email here'),
+          ),
+          TextField(
+            controller: _password,
+            obscureText: true,
+            enableSuggestions: false,
+            autocorrect: false,
+            decoration: const InputDecoration(
+                hintText: 'Enter your password here'),
+          ),
+          TextButton(
+            onPressed: () async {
+              final email = _email.text;
+              final password = _password.text;
 
-            try {
-              final userCredential = await FirebaseAuth.instance
-                  .createUserWithEmailAndPassword(
-                  email: email, password: password);
+              try {
+                final userCredential = await FirebaseAuth.instance
+                    .createUserWithEmailAndPassword(
+                    email: email, password: password);
 
-              print(userCredential);
-            } on FirebaseAuthException catch (e) {
-              print('Something bad happened');
-              print(e.code);
+                print(userCredential);
+              } on FirebaseAuthException catch (e) {
+                print('Something bad happened');
+                print(e.code);
 
-              switch (e.code) {
-                case 'weak-password':
-                  print('Weak password');
-                  break;
-                case 'email-already-in-use':
-                  print('Email alreasy in use');
-                  break;
-                case 'invalid-email':
-                  print('Invalid email');
-                  break;
+                switch (e.code) {
+                  case 'weak-password':
+                    print('Weak password');
+                    break;
+                  case 'email-already-in-use':
+                    print('Email alreasy in use');
+                    break;
+                  case 'invalid-email':
+                    print('Invalid email');
+                    break;
+                }
+
+                print(e);
+              } catch (e) {
+                print('Something bad happened');
+                print(e.runtimeType);
+                print(e);
               }
-
-              print(e);
-            } catch (e) {
-              print('Something bad happened');
-              print(e.runtimeType);
-              print(e);
-            }
-          },
-          child: const Text('Register'),
-        )
-      ],
+            },
+            child: const Text('Register'),
+          )
+        ],
+      ),
     );
   }
 }
