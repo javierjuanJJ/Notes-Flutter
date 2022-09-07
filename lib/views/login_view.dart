@@ -36,16 +36,15 @@ class _LoginViewState extends State<LoginView> {
           keyboardType: TextInputType.emailAddress,
           autocorrect: false,
           controller: _email,
-          decoration: const InputDecoration(
-              hintText: 'Enter your email here'),
+          decoration: const InputDecoration(hintText: 'Enter your email here'),
         ),
         TextField(
           controller: _password,
           obscureText: true,
           enableSuggestions: false,
           autocorrect: false,
-          decoration: const InputDecoration(
-              hintText: 'Enter your password here'),
+          decoration:
+              const InputDecoration(hintText: 'Enter your password here'),
         ),
         TextButton(
           onPressed: () async {
@@ -54,39 +53,34 @@ class _LoginViewState extends State<LoginView> {
 
             try {
               final userCredential = await FirebaseAuth.instance
-                  .signInWithEmailAndPassword(
-                  email: email,
-                  password: password
-              );
+                  .signInWithEmailAndPassword(email: email, password: password);
 
               print(userCredential);
-            }
-            on FirebaseAuthException catch (e){
+            } on FirebaseAuthException catch (e) {
               print('Something bad happened');
               print(e.code);
 
-              if (e.code == 'user-not-found'){
+              if (e.code == 'user-not-found') {
                 print('User not found');
-              }
-              else if (e.code == 'wrong-password'){
+              } else if (e.code == 'wrong-password') {
                 print('Wrong password');
               }
 
               print(e);
-            }
-            catch (e){
+            } catch (e) {
               print('Something bad happened');
               print(e.runtimeType);
               print(e);
             }
-
-
           },
           child: const Text('Login'),
         ),
-        TextButton(onPressed: () {
-
-        }, child: Text('Not registered yet? Register here!'))
+        TextButton(
+            onPressed: () {
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil('/register/', (route) => false);
+            },
+            child: Text('Not registered yet? Register here!'))
       ],
     );
   }
