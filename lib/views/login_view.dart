@@ -62,6 +62,9 @@ class _LoginViewState extends State<LoginView> {
 
                 final user = FirebaseAuth.instance.currentUser;
 
+                
+
+
                 if (user?.emailVerified ?? false) {
                   Navigator.of(context)
                       .pushNamedAndRemoveUntil(notesRoute, (route) => false);
@@ -70,7 +73,7 @@ class _LoginViewState extends State<LoginView> {
                   Navigator.of(context)
                       .pushNamedAndRemoveUntil(verifyEmailRoute, (route) => false);
                 }
-                
+
               } on FirebaseAuthException catch (e) {
                 print('Something bad happened');
                 print(e.code);
