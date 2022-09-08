@@ -1,9 +1,8 @@
-import 'dart:developer' as devtools show log;
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:notes/constants/routes.dart';
+import 'package:notes/services/auth/auth_exceptions.dart';
+import 'package:notes/services/auth/auth_service.dart';
 import 'package:notes/utilities/show_error_dialog.dart';
 
 class RegisterView extends StatefulWidget {
@@ -59,43 +58,19 @@ class _RegisterViewState extends State<RegisterView> {
               final password = _password.text;
 
               try {
-                final userCredential = await FirebaseAuth.instance
-                    .createUserWithEmailAndPassword(
-                        email: email, password: password);
-
-                final user = FirebaseAuth.instance.currentUser;
-                await user?.sendEmailVerification();
+                await AuthService.firebase()
+                    .createUser(email: email, password: password);
+                await AuthService.firebase().sendEmailVerification();
 
                 Navigator.of(context).pushNamed(verifyEmailRoute);
-
-                print(userCredential);
-                devtools.log(userCredential.toString());
-              } on FirebaseAuthException catch (e) {
-                print('Something bad happened');
-                print(e.code);
-
-                switch (e.code) {
-                  case 'weak-password':
-                    print('Weak password');
-                    await showLoginError(context, 'Weak password');
-                    break;
-                  case 'email-already-in-use':
-                    print('Email alreasy in use');
-                    await showLoginError(context, 'Email alreasy in use');
-                    break;
-                  case 'invalid-email':
-                    print('Invalid email');
-                    await showLoginError(context, 'Invalid email');
-                    break;
-                }
-
-                print(e);
-              } catch (e) {
-                print('Something bad happened');
-                print(e.runtimeType);
-                print(e);
-
-                await showLoginError(context, e.toString());
+              } on EmailAlreadyInUseAuthException {
+                await showLoginError(context, 'Email alreasy in use');
+              } on WeakPasswordAuthException {
+                await showLoginError(context, 'Weak password');
+              } on InvalidEmailAuthException {
+                await showLoginError(context, 'Invalid email');
+              } on GenericAuthException {
+                await showLoginError(context, 'Failed to register');
               }
             },
             child: const Text('Register'),
