@@ -63,6 +63,9 @@ class _RegisterViewState extends State<RegisterView> {
                     .createUserWithEmailAndPassword(
                         email: email, password: password);
 
+                final user = FirebaseAuth.instance.currentUser;
+                await user?.sendEmailVerification();
+
                 Navigator.of(context).pushNamed(verifyEmailRoute);
 
                 print(userCredential);
