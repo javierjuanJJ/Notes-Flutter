@@ -20,3 +20,5 @@ class WeakPasswordAuthException implements Exception {
 class InvalidEmailAuthException implements Exception {
 
 }
+
+// Generic exception
