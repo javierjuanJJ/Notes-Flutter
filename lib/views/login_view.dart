@@ -58,44 +58,25 @@ class _LoginViewState extends State<LoginView> {
               final password = _password.text;
 
               try {
-                await AuthService.firebase().logIn(email: email, password: password);
+                await AuthService.firebase()
+                    .logIn(email: email, password: password);
                 final user = AuthService.firebase().currentUser;
 
                 if (user?.isEmailVerified ?? false) {
                   Navigator.of(context)
                       .pushNamedAndRemoveUntil(notesRoute, (route) => false);
+                } else {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      verifyEmailRoute, (route) => false);
                 }
-                else {
-                  Navigator.of(context)
-                      .pushNamedAndRemoveUntil(verifyEmailRoute, (route) => false);
-                }
-
-              }
-              on UserNotFoundAuthException {
-                await showLoginError(
-                    context,
-                    'User not found'
-                );
-              }
-              on WrongPasswordAuthException {
-                await showLoginError(
-                    context,
-                    'Wrong password'
-                );
-              }
-              on GenericAuthException {
-                await showLoginError(
-                    context,
-                    'Authentication error'
-                );
-              }
-              catch (e) {
-
-                await showLoginError(
-                    context,
-                    'Error: ${e.toString()}'
-                );
-
+              } on UserNotFoundAuthException {
+                await showLoginError(context, 'User not found');
+              } on WrongPasswordAuthException {
+                await showLoginError(context, 'Wrong password');
+              } on GenericAuthException {
+                await showLoginError(context, 'Authentication error');
+              } catch (e) {
+                await showLoginError(context, 'Error: ${e.toString()}');
               }
             },
             child: const Text('Login'),

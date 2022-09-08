@@ -1,10 +1,10 @@
+import 'dart:developer' as devtools show log;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:notes/constants/routes.dart';
 import 'package:notes/enums/menuAction.dart';
 import 'package:notes/main.dart';
-import 'dart:developer' as devtools show log;
-
 import 'package:notes/services/auth/auth_service.dart';
 
 class NotesView extends StatefulWidget {
