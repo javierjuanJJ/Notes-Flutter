@@ -89,8 +89,13 @@ class _LoginViewState extends State<LoginView> {
                 print(e);
               } catch (e) {
                 print('Something bad happened');
-                print(e.runtimeType);
-                print(e);
+                print(e.toString());
+
+                await showLoginError(
+                    context,
+                    'Error: ${e.toString()}'
+                );
+
               }
             },
             child: const Text('Login'),
