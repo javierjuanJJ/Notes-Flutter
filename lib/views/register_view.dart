@@ -1,12 +1,10 @@
+import 'dart:developer' as devtools show log;
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer' as devtools show log;
-
-import 'package:notes/utilities/show_error_dialog.dart';
-
 import 'package:notes/constants/routes.dart';
+import 'package:notes/utilities/show_error_dialog.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
@@ -44,16 +42,16 @@ class _RegisterViewState extends State<RegisterView> {
             keyboardType: TextInputType.emailAddress,
             autocorrect: false,
             controller: _email,
-            decoration: const InputDecoration(
-                hintText: 'Enter your email here'),
+            decoration:
+                const InputDecoration(hintText: 'Enter your email here'),
           ),
           TextField(
             controller: _password,
             obscureText: true,
             enableSuggestions: false,
             autocorrect: false,
-            decoration: const InputDecoration(
-                hintText: 'Enter your password here'),
+            decoration:
+                const InputDecoration(hintText: 'Enter your password here'),
           ),
           TextButton(
             onPressed: () async {
@@ -63,7 +61,9 @@ class _RegisterViewState extends State<RegisterView> {
               try {
                 final userCredential = await FirebaseAuth.instance
                     .createUserWithEmailAndPassword(
-                    email: email, password: password);
+                        email: email, password: password);
+
+                Navigator.of(context).pushNamed(verifyEmailRoute);
 
                 print(userCredential);
                 devtools.log(userCredential.toString());
@@ -74,24 +74,15 @@ class _RegisterViewState extends State<RegisterView> {
                 switch (e.code) {
                   case 'weak-password':
                     print('Weak password');
-                    await showLoginError(
-                        context,
-                        'Weak password'
-                    );
+                    await showLoginError(context, 'Weak password');
                     break;
                   case 'email-already-in-use':
                     print('Email alreasy in use');
-                    await showLoginError(
-                        context,
-                        'Email alreasy in use'
-                    );
+                    await showLoginError(context, 'Email alreasy in use');
                     break;
                   case 'invalid-email':
                     print('Invalid email');
-                    await showLoginError(
-                        context,
-                        'Invalid email'
-                    );
+                    await showLoginError(context, 'Invalid email');
                     break;
                 }
 
@@ -101,11 +92,7 @@ class _RegisterViewState extends State<RegisterView> {
                 print(e.runtimeType);
                 print(e);
 
-                await showLoginError(
-                    context,
-                    e.toString()
-                );
-
+                await showLoginError(context, e.toString());
               }
             },
             child: const Text('Register'),
