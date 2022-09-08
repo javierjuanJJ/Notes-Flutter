@@ -7,4 +7,8 @@ class WrongPasswordAuthException implements Exception {
 
 }
 
-// Login exceptions
+// Register exceptions
+
+class WeakPasswordAuthException implements Exception {
+
+}
