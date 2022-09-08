@@ -16,3 +16,7 @@ class EmailAlreadyInUseAuthException implements Exception {
 class WeakPasswordAuthException implements Exception {
 
 }
+
+class InvalidEmailAuthException implements Exception {
+
+}
