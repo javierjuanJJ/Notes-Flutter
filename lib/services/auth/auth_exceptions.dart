@@ -22,3 +22,7 @@ class InvalidEmailAuthException implements Exception {
 }
 
 // Generic exception
+
+class GenericAuthException implements Exception {
+
+}
