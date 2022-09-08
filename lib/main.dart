@@ -23,8 +23,6 @@ void main() {
   ));
 }
 
-
-
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -57,8 +55,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-
 
 Future<bool> showLogOutDialog(BuildContext context) {
   return showDialog(
