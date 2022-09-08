@@ -1,7 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:notes/constants/routes.dart';
+import 'package:notes/services/auth/auth_exceptions.dart';
+import 'package:notes/services/auth/auth_service.dart';
 import 'package:notes/utilities/show_error_dialog.dart';
 
 class LoginView extends StatefulWidget {
@@ -57,15 +58,10 @@ class _LoginViewState extends State<LoginView> {
               final password = _password.text;
 
               try {
-                await FirebaseAuth.instance.signInWithEmailAndPassword(
-                    email: email, password: password);
+                await AuthService.firebase().logIn(email: email, password: password);
+                final user = AuthService.firebase().currentUser;
 
-                final user = FirebaseAuth.instance.currentUser;
-
-                
-
-
-                if (user?.emailVerified ?? false) {
+                if (user?.isEmailVerified ?? false) {
                   Navigator.of(context)
                       .pushNamedAndRemoveUntil(notesRoute, (route) => false);
                 }
@@ -74,35 +70,26 @@ class _LoginViewState extends State<LoginView> {
                       .pushNamedAndRemoveUntil(verifyEmailRoute, (route) => false);
                 }
 
-              } on FirebaseAuthException catch (e) {
-                print('Something bad happened');
-                print(e.code);
-
-                if (e.code == 'user-not-found') {
-                  print('User not found');
-                  await showLoginError(
-                      context,
-                      'User not found'
-                  );
-                } else if (e.code == 'wrong-password') {
-                  print('Wrong password');
-                  await showLoginError(
-                      context,
-                      'Wrong password'
-                  );
-                }
-                else{
-                  print('Error: ${e.code}');
-                  await showLoginError(
-                      context,
-                      'Error: ${e.code}'
-                  );
-                }
-
-                print(e);
-              } catch (e) {
-                print('Something bad happened');
-                print(e.toString());
+              }
+              on UserNotFoundAuthException {
+                await showLoginError(
+                    context,
+                    'User not found'
+                );
+              }
+              on WrongPasswordAuthException {
+                await showLoginError(
+                    context,
+                    'Wrong password'
+                );
+              }
+              on GenericAuthException {
+                await showLoginError(
+                    context,
+                    'Authentication error'
+                );
+              }
+              catch (e) {
 
                 await showLoginError(
                     context,
