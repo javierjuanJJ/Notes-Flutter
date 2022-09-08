@@ -1,0 +1,3 @@
+class UserNotFoundAuthException implements Exception {
+
+}
