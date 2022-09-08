@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer' as devtools show log;
 
+import 'package:notes/utilities/show_error_dialog.dart';
+
 import 'package:notes/constants/routes.dart';
 
 class RegisterView extends StatefulWidget {
@@ -72,12 +74,24 @@ class _RegisterViewState extends State<RegisterView> {
                 switch (e.code) {
                   case 'weak-password':
                     print('Weak password');
+                    await showLoginError(
+                        context,
+                        'Weak password'
+                    );
                     break;
                   case 'email-already-in-use':
                     print('Email alreasy in use');
+                    await showLoginError(
+                        context,
+                        'Email alreasy in use'
+                    );
                     break;
                   case 'invalid-email':
                     print('Invalid email');
+                    await showLoginError(
+                        context,
+                        'Invalid email'
+                    );
                     break;
                 }
 
@@ -86,6 +100,12 @@ class _RegisterViewState extends State<RegisterView> {
                 print('Something bad happened');
                 print(e.runtimeType);
                 print(e);
+
+                await showLoginError(
+                    context,
+                    e.toString()
+                );
+
               }
             },
             child: const Text('Register'),
