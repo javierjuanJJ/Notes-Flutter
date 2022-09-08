@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer' as devtools show log;
-
 import 'package:notes/constants/routes.dart';
 
 class LoginView extends StatefulWidget {
@@ -41,7 +39,8 @@ class _LoginViewState extends State<LoginView> {
             keyboardType: TextInputType.emailAddress,
             autocorrect: false,
             controller: _email,
-            decoration: const InputDecoration(hintText: 'Enter your email here'),
+            decoration:
+                const InputDecoration(hintText: 'Enter your email here'),
           ),
           TextField(
             controller: _password,
@@ -49,7 +48,7 @@ class _LoginViewState extends State<LoginView> {
             enableSuggestions: false,
             autocorrect: false,
             decoration:
-            const InputDecoration(hintText: 'Enter your password here'),
+                const InputDecoration(hintText: 'Enter your password here'),
           ),
           TextButton(
             onPressed: () async {
@@ -57,13 +56,11 @@ class _LoginViewState extends State<LoginView> {
               final password = _password.text;
 
               try {
-                await FirebaseAuth.instance
-                    .signInWithEmailAndPassword(email: email, password: password);
-
+                await FirebaseAuth.instance.signInWithEmailAndPassword(
+                    email: email, password: password);
 
                 Navigator.of(context)
                     .pushNamedAndRemoveUntil(notesRoute, (route) => false);
-
               } on FirebaseAuthException catch (e) {
                 print('Something bad happened');
                 print(e.code);
@@ -93,4 +90,23 @@ class _LoginViewState extends State<LoginView> {
       ),
     );
   }
+}
+
+Future<void> showLoginError(BuildContext context, String text) {
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text(''),
+        content: Text(text),
+        actions: [
+          TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'))
+        ],
+      );
+    },
+  );
 }
