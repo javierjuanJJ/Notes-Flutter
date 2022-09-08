@@ -30,4 +30,9 @@ class AuthService implements AuthProvider {
   Future<AuthUser?> sendEmailVerification() {
     return provider.sendEmailVerification();
   }
+
+  @override
+  Future<void> initialize() async {
+    provider.initialize();
+  }
 }
