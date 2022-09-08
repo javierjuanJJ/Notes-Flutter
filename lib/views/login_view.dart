@@ -67,8 +67,23 @@ class _LoginViewState extends State<LoginView> {
 
                 if (e.code == 'user-not-found') {
                   print('User not found');
+                  await showLoginError(
+                      context,
+                      'User not found'
+                  );
                 } else if (e.code == 'wrong-password') {
                   print('Wrong password');
+                  await showLoginError(
+                      context,
+                      'Wrong password'
+                  );
+                }
+                else{
+                  print('Error: ${e.code}');
+                  await showLoginError(
+                      context,
+                      'Error: ${e.code}'
+                  );
                 }
 
                 print(e);
