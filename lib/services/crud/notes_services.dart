@@ -112,6 +112,7 @@ class NotesService {
     else{
       final note = DatabaseNote.fromRaw(createAccount.first);
       _notes.removeWhere((note) => note.id == id);
+      _notes.add(note);
       _noteStreamController.add(_notes);
       return note;
     }
