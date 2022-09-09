@@ -109,12 +109,24 @@ class NotesService {
     if (createAccount.isEmpty) {
       throw CoiuldNotFindNoteException();
     }
-    return DatabaseNote.fromRaw(createAccount.first);
+    else{
+      final note = DatabaseNote.fromRaw(createAccount.first);
+      _notes.removeWhere((note) => note.id == id);
+      _noteStreamController.add(_notes);
+      return note;
+    }
+
   }
 
   Future<int> deleteAllNotes() async {
     final db = _getDatabaseOrThrow();
-    return await db.delete(noteTable);
+
+    final numberOfDeletions = await db.delete(noteTable);
+
+    _notes = [];
+    _noteStreamController.add(_notes);
+
+    return numberOfDeletions;
   }
 
   Future<void> deleteNote({required int id}) async {
@@ -123,6 +135,10 @@ class NotesService {
         await db.delete(noteTable, where: '$idColumn = ?', whereArgs: [id]);
     if (deleteAccount != 1) {
       throw CouldNotDeleteNoteException();
+    }
+    else{
+      _notes.removeWhere((note) => note.id == id);
+      _noteStreamController.add(_notes);
     }
   }
 
@@ -144,6 +160,9 @@ class NotesService {
 
     final note = DatabaseNote(
         id: noteId, user_id: owner.id, text: text, is_synced_with_cloud: true);
+
+    _notes.add(note);
+    _noteStreamController.add(_notes);
 
     return note;
   }
@@ -219,6 +238,7 @@ class NotesService {
       // create note column
 
       await db.execute(createNoteTable);
+      await _cacheNotes();
     } on MissingPlatformDirectoryException {
       throw UnableToGetDocumentDirectoryException();
     }
