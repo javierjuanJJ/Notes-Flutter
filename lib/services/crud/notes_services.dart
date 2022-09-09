@@ -72,7 +72,8 @@ class NotesService {
 
   List<DatabaseNote> _notes = [];
 
-  final _noteStreamController = StreamController<List<DatabaseNote>>.broadcast();
+  final _noteStreamController =
+      StreamController<List<DatabaseNote>>.broadcast();
 
   Future<void> _cacheNotes() async {
     final allNotes = await getAllNotes();
@@ -114,15 +115,13 @@ class NotesService {
         .query(noteTable, limit: 1, where: '$idColumn = ?', whereArgs: [id]);
     if (createAccount.isEmpty) {
       throw CoiuldNotFindNoteException();
-    }
-    else{
+    } else {
       final note = DatabaseNote.fromRaw(createAccount.first);
       _notes.removeWhere((note) => note.id == id);
       _notes.add(note);
       _noteStreamController.add(_notes);
       return note;
     }
-
   }
 
   Future<int> deleteAllNotes() async {
@@ -142,8 +141,7 @@ class NotesService {
         await db.delete(noteTable, where: '$idColumn = ?', whereArgs: [id]);
     if (deleteAccount != 1) {
       throw CouldNotDeleteNoteException();
-    }
-    else{
+    } else {
       _notes.removeWhere((note) => note.id == id);
       _noteStreamController.add(_notes);
     }
@@ -182,6 +180,18 @@ class NotesService {
       throw CoiuldNotFindUserException();
     }
     return DatabaseUser.fromRaw(createAccount.first);
+  }
+
+  Future<DatabaseUser> getOrCreateUser({required String email}) async {
+    try {
+      final user = await getUser(email: email);
+      return user;
+    } on CoiuldNotFindUserException {
+      final user = await createUser(email: email);
+      return user;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<DatabaseUser> createUser({required String email}) async {
