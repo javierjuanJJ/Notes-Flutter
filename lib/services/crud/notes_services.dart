@@ -83,6 +83,7 @@ class NotesService {
 
   Future<DatabaseNote> updateNote(
       {required DatabaseNote note, required String text}) async {
+    await _ensureDblsOpen();
     final db = _getDatabaseOrThrow();
     await getNote(id: note.id);
 
@@ -103,6 +104,7 @@ class NotesService {
   }
 
   Future<Iterable<DatabaseNote>> getAllNotes() async {
+    await _ensureDblsOpen();
     final db = _getDatabaseOrThrow();
     final createAccount = await db.query(noteTable);
 
@@ -110,6 +112,7 @@ class NotesService {
   }
 
   Future<DatabaseNote> getNote({required int id}) async {
+    await _ensureDblsOpen();
     final db = _getDatabaseOrThrow();
     final createAccount = await db
         .query(noteTable, limit: 1, where: '$idColumn = ?', whereArgs: [id]);
@@ -125,6 +128,7 @@ class NotesService {
   }
 
   Future<int> deleteAllNotes() async {
+    await _ensureDblsOpen();
     final db = _getDatabaseOrThrow();
 
     final numberOfDeletions = await db.delete(noteTable);
@@ -136,6 +140,7 @@ class NotesService {
   }
 
   Future<void> deleteNote({required int id}) async {
+    await _ensureDblsOpen();
     final db = _getDatabaseOrThrow();
     final deleteAccount =
         await db.delete(noteTable, where: '$idColumn = ?', whereArgs: [id]);
@@ -148,6 +153,7 @@ class NotesService {
   }
 
   Future<DatabaseNote> createNote({required DatabaseUser owner}) async {
+    await _ensureDblsOpen();
     final db = _getDatabaseOrThrow();
     final dbUser = await getUser(email: owner.email);
 
@@ -173,6 +179,7 @@ class NotesService {
   }
 
   Future<DatabaseUser> getUser({required String email}) async {
+    await _ensureDblsOpen();
     final db = _getDatabaseOrThrow();
     final createAccount = await db.query(userTable,
         limit: 1, where: '$emailColumn = ?', whereArgs: [email.toLowerCase()]);
@@ -195,6 +202,7 @@ class NotesService {
   }
 
   Future<DatabaseUser> createUser({required String email}) async {
+    await _ensureDblsOpen();
     final db = _getDatabaseOrThrow();
     final createAccount = await db.query(userTable,
         limit: 1, where: '$emailColumn = ?', whereArgs: [email.toLowerCase()]);
@@ -208,6 +216,7 @@ class NotesService {
   }
 
   Future<void> deleteUser({required String email}) async {
+    await _ensureDblsOpen();
     final db = _getDatabaseOrThrow();
     final deleteAccount = db.delete(userTable,
         where: '$emailColumn = ?', whereArgs: [email.toLowerCase()]);
@@ -226,7 +235,14 @@ class NotesService {
     }
   }
 
+  Future<void> _ensureDblsOpen() async {
+    try {
+      await open();
+    } on DatabaseAlreadyOpenException {}
+  }
+
   Future<void> close() async {
+
     final db = _db;
 
     if (db == null) {
