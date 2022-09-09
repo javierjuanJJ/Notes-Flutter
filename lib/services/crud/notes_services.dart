@@ -67,13 +67,23 @@ class DatabaseNote {
 class NotesService {
   Database? _db;
 
+  Future<DatabaseUser> createUser({required String email}) async {
+    final db = _getDatabaseOrThrow();
+    final createAccount = await db.query(userTable,
+        limit: 1, where: 'email = ?', whereArgs: [email.toLowerCase()]);
+    if (createAccount.isNotEmpty) {
+      throw UserAlreadysException();
+    }
+    final userId =
+        await db.insert(userTable, {emailColumn: email.toLowerCase()});
+
+    return DatabaseUser(id: userId, email: email);
+  }
+
   Future<void> deleteUser({required String email}) async {
     final db = _getDatabaseOrThrow();
-    final deleteAccount = db.delete(
-        userTable,
-        where: 'email = ?',
-        whereArgs: [email.toLowerCase()]
-    );
+    final deleteAccount = db.delete(userTable,
+        where: 'email = ?', whereArgs: [email.toLowerCase()]);
     if (deleteAccount != 1) {
       throw CouldNotDeleteUserException();
     }
@@ -125,6 +135,8 @@ class NotesService {
 }
 
 class UnableToGetDocumentDirectoryException implements Exception {}
+
+class UserAlreadysException implements Exception {}
 
 class CouldNotDeleteUserException implements Exception {}
 
