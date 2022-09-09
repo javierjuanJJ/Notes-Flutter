@@ -25,8 +25,7 @@ class DatabaseUser {
   }
 }
 
-const idColumn = 'id';
-const emailColumn = 'email';
+
 
 @immutable
 class DatabaseNote {
@@ -64,6 +63,15 @@ class DatabaseNote {
   }
 }
 
+class NotesService {
+
+}
+
+const dbName = 'notes.db';
+const noteTable = 'note';
+const userTable = 'user';
+const idColumn = 'id';
+const emailColumn = 'email';
 const userIdColumn = 'user_id';
 const textColumn = 'text';
 const isSyncedWithCloudIdColumn = false;
