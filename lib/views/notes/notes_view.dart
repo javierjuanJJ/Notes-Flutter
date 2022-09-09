@@ -38,6 +38,12 @@ class _NotesViewState extends State<NotesView> {
       appBar: AppBar(
         title: Text('My notes'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.of(context).pushNamed(newNoteRoute);
+            },
+          ),
           PopupMenuButton<MenuAction>(
             onSelected: (value) async {
               switch (value) {
