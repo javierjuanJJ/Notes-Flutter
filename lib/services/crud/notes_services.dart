@@ -67,6 +67,16 @@ class DatabaseNote {
 class NotesService {
   Database? _db;
 
+  Future<DatabaseUser> getUser({required String email}) async {
+    final db = _getDatabaseOrThrow();
+    final createAccount = await db.query(userTable,
+        limit: 1, where: 'email = ?', whereArgs: [email.toLowerCase()]);
+    if (createAccount.isEmpty) {
+      throw CoiuldNotFindUserException();
+    }
+    return DatabaseUser.fromRaw(createAccount.first);
+  }
+
   Future<DatabaseUser> createUser({required String email}) async {
     final db = _getDatabaseOrThrow();
     final createAccount = await db.query(userTable,
@@ -133,6 +143,8 @@ class NotesService {
     }
   }
 }
+
+class CoiuldNotFindUserException implements Exception {}
 
 class UnableToGetDocumentDirectoryException implements Exception {}
 
