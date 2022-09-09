@@ -67,10 +67,32 @@ class DatabaseNote {
 class NotesService {
   Database? _db;
 
+  Future<DatabaseNote> createNote({required DatabaseUser owner}) async {
+    final db = _getDatabaseOrThrow();
+    final dbUser = await getUser(email: owner.email);
+
+    if (dbUser != owner) {
+      throw CoiuldNotFindUserException();
+    }
+
+    const text = '';
+
+    final noteId = await db.insert(noteTable, {
+      userIdColumn: owner.id,
+      textColumn: text,
+      isSyncedWithCloudIdColumn: 1
+    });
+
+    final note = DatabaseNote(
+        id: noteId, user_id: owner.id, text: text, is_synced_with_cloud: true);
+
+    return note;
+  }
+
   Future<DatabaseUser> getUser({required String email}) async {
     final db = _getDatabaseOrThrow();
     final createAccount = await db.query(userTable,
-        limit: 1, where: 'email = ?', whereArgs: [email.toLowerCase()]);
+        limit: 1, where: '$emailColumn = ?', whereArgs: [email.toLowerCase()]);
     if (createAccount.isEmpty) {
       throw CoiuldNotFindUserException();
     }
@@ -80,7 +102,7 @@ class NotesService {
   Future<DatabaseUser> createUser({required String email}) async {
     final db = _getDatabaseOrThrow();
     final createAccount = await db.query(userTable,
-        limit: 1, where: 'email = ?', whereArgs: [email.toLowerCase()]);
+        limit: 1, where: '$emailColumn = ?', whereArgs: [email.toLowerCase()]);
     if (createAccount.isNotEmpty) {
       throw UserAlreadysException();
     }
@@ -177,4 +199,4 @@ const idColumn = 'id';
 const emailColumn = 'email';
 const userIdColumn = 'user_id';
 const textColumn = 'text';
-const isSyncedWithCloudIdColumn = false;
+const String isSyncedWithCloudIdColumn = 'is_synced_with_cloud';
