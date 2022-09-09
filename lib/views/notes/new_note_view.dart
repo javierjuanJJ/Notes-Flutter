@@ -27,6 +27,14 @@ class _NewNoteViewState extends State<NewNoteView> {
     return await _notesService.createNote(owner: owner);
   }
 
+  void _deleteNoteIfTextIsEmpty() async {
+    final existingNote = _note;
+
+    if (_textController.text.isEmpty && existingNote != null){
+        _notesService.deleteNote(id: existingNote.id);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
