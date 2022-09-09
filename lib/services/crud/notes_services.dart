@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:notes/services/crud/crud_exceptions.dart';
 import 'package:path/path.dart';
@@ -67,6 +69,10 @@ class DatabaseNote {
 
 class NotesService {
   Database? _db;
+
+  List<DatabaseNote> _notes = [];
+
+  final _noteStreamController = StreamController<List<DatabaseNote>>.broadcast();
 
   Future<DatabaseNote> updateNote(
       {required DatabaseNote note, required String text}) async {
