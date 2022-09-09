@@ -11,14 +11,13 @@ class NewNoteView extends StatefulWidget {
 }
 
 class _NewNoteViewState extends State<NewNoteView> {
-
   DatabaseNote? _note;
   late final NotesService _notesService;
   late final TextEditingController _textController;
 
   Future<DatabaseNote> createNewNote() async {
     final existingNote = _note;
-    if(existingNote != null) {
+    if (existingNote != null) {
       return existingNote;
     }
     final currentUser = AuthService.firebase().currentUser!;
@@ -30,16 +29,34 @@ class _NewNoteViewState extends State<NewNoteView> {
   void _deleteNoteIfTextIsEmpty() async {
     final existingNote = _note;
 
-    if (_textController.text.isEmpty && existingNote != null){
-        _notesService.deleteNote(id: existingNote.id);
+    if (_textController.text.isEmpty && existingNote != null) {
+      _notesService.deleteNote(id: existingNote.id);
     }
+  }
+
+  void _setupTextControllerListener() async {
+    _textController.removeListener(() {
+      _testControllerListener();
+    });
+    _textController.addListener(() {
+      _testControllerListener();
+    });
   }
 
   void _saveNoteIfTextIsEmpty() async {
     final existingNote = _note;
 
-    if (existingNote != null && _textController.text.isNotEmpty){
+    if (existingNote != null && _textController.text.isNotEmpty) {
       _notesService.updateNote(note: existingNote, text: _textController.text);
+    }
+  }
+
+  void _testControllerListener() async {
+    final note = _note;
+    final text = _textController.text;
+
+    if (note != null) {
+      _notesService.updateNote(note: note, text: text);
     }
   }
 
@@ -52,9 +69,19 @@ class _NewNoteViewState extends State<NewNoteView> {
   }
 
   @override
+  void initState() {
+    _notesService = NotesService();
+    _textController = TextEditingController();
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('New Note'),),
+      appBar: AppBar(
+        title: Text('New Note'),
+      ),
       body: const Text(''),
     );
   }
