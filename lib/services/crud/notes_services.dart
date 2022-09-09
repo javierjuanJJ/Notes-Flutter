@@ -91,7 +91,13 @@ class NotesService {
     if (updatesCount == 0) {
       throw CouldNotUpdateNoteException();
     } else {
-      return await getNote(id: note.id);
+      final updateNote = await getNote(id: note.id);
+
+      _notes.removeWhere((note) => updateNote.id == note.id);
+      _notes.add(note);
+      _noteStreamController.add(_notes);
+
+      return updateNote;
     }
   }
 
