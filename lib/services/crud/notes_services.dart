@@ -67,6 +67,16 @@ class DatabaseNote {
 class NotesService {
   Database? _db;
 
+  Future<DatabaseNote> getNote({required int id}) async {
+    final db = _getDatabaseOrThrow();
+    final createAccount = await db.query(noteTable,
+        limit: 1, where: '$idColumn = ?', whereArgs: [id]);
+    if (createAccount.isEmpty) {
+      throw CoiuldNotFindNoteException();
+    }
+    return DatabaseNote.fromRaw(createAccount.first);
+  }
+
   Future<int> deleteAllNotes() async {
     final db = _getDatabaseOrThrow();
     return await db.delete(noteTable);
@@ -178,6 +188,9 @@ class NotesService {
       throw UnableToGetDocumentDirectoryException();
     }
   }
+}
+
+class CoiuldNotFindNoteException implements Exception {
 }
 
 class CouldNotDeleteNoteException implements Exception {}
