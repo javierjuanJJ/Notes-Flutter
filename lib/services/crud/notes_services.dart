@@ -1,4 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqflite.dart';
 
 @immutable
 class DatabaseUser {
@@ -24,8 +27,6 @@ class DatabaseUser {
     return 'DatabaseUser{id: $id, email: $email}';
   }
 }
-
-
 
 @immutable
 class DatabaseNote {
@@ -64,9 +65,51 @@ class DatabaseNote {
 }
 
 class NotesService {
+  Database? _db;
 
+  Future<void> open() async {
+    if (_db != null) {
+      throw DatabaseAlreadyOpenException();
+    }
+
+    try {
+      final docsPath = await getApplicationDocumentsDirectory();
+      final dbPath = join(docsPath.path, dbName);
+      final db = await openDatabase(dbPath);
+
+      _db = db;
+
+      // create user column
+
+      await db.execute(createUserTable);
+
+      // create note column
+
+      await db.execute(createNoteTable);
+
+    } on MissingPlatformDirectoryException {
+      throw UnableToGetDocumentDirectoryException();
+    }
+  }
 }
 
+class UnableToGetDocumentDirectoryException implements Exception {}
+
+class DatabaseAlreadyOpenException implements Exception {}
+const createUserTable = ''' CREATE TABLE IF NOT EXISTS "$userTable" (
+	"$idColumn"	INTEGER NOT NULL,
+	"$emailColumn"	TEXT NOT NULL UNIQUE,
+	PRIMARY KEY("$idColumn" AUTOINCREMENT)
+); ''';
+
+const createNoteTable = ''' CREATE TABLE IF NOT EXISTS "$noteTable" (
+	"$idColumn"	INTEGER NOT NULL,
+	"$userIdColumn"	INTEGER NOT NULL,
+	"$textColumn"	TEXT,
+	"$isSyncedWithCloudIdColumn"	INTEGER DEFAULT 0,
+	PRIMARY KEY("$idColumn" AUTOINCREMENT),
+	FOREIGN KEY("$userIdColumn") REFERENCES "$userTable"("$idColumn")
+) ''';
 const dbName = 'notes.db';
 const noteTable = 'note';
 const userTable = 'user';
