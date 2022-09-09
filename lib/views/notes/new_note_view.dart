@@ -44,6 +44,14 @@ class _NewNoteViewState extends State<NewNoteView> {
   }
 
   @override
+  void dispose() {
+    _deleteNoteIfTextIsEmpty();
+    _saveNoteIfTextIsEmpty();
+    _textController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('New Note'),),
