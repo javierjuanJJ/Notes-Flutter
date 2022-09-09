@@ -67,6 +67,38 @@ class DatabaseNote {
 class NotesService {
   Database? _db;
 
+  Future<void> deleteUser({required String email}) async {
+    final db = _getDatabaseOrThrow();
+    final deleteAccount = db.delete(
+        userTable,
+        where: 'email = ?',
+        whereArgs: [email.toLowerCase()]
+    );
+    if (deleteAccount != 1) {
+      throw CouldNotDeleteUserException();
+    }
+  }
+
+  Database _getDatabaseOrThrow() {
+    final db = _db;
+
+    if (db == null) {
+      throw DatabaseIsNotOpenException();
+    } else {
+      return db;
+    }
+  }
+
+  Future<void> close() async {
+    final db = _db;
+
+    if (db == null) {
+      throw DatabaseIsNotOpenException();
+    } else {
+      await db.close();
+    }
+  }
+
   Future<void> open() async {
     if (_db != null) {
       throw DatabaseAlreadyOpenException();
@@ -86,7 +118,6 @@ class NotesService {
       // create note column
 
       await db.execute(createNoteTable);
-
     } on MissingPlatformDirectoryException {
       throw UnableToGetDocumentDirectoryException();
     }
@@ -95,7 +126,12 @@ class NotesService {
 
 class UnableToGetDocumentDirectoryException implements Exception {}
 
+class CouldNotDeleteUserException implements Exception {}
+
 class DatabaseAlreadyOpenException implements Exception {}
+
+class DatabaseIsNotOpenException implements Exception {}
+
 const createUserTable = ''' CREATE TABLE IF NOT EXISTS "$userTable" (
 	"$idColumn"	INTEGER NOT NULL,
 	"$emailColumn"	TEXT NOT NULL UNIQUE,
