@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:notes/services/crud/crud_exceptions.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -211,24 +212,6 @@ class NotesService {
     }
   }
 }
-
-class CouldNotUpdateNoteException implements Exception {}
-
-class CoiuldNotFindNoteException implements Exception {}
-
-class CouldNotDeleteNoteException implements Exception {}
-
-class CoiuldNotFindUserException implements Exception {}
-
-class UnableToGetDocumentDirectoryException implements Exception {}
-
-class UserAlreadysException implements Exception {}
-
-class CouldNotDeleteUserException implements Exception {}
-
-class DatabaseAlreadyOpenException implements Exception {}
-
-class DatabaseIsNotOpenException implements Exception {}
 
 const createUserTable = ''' CREATE TABLE IF NOT EXISTS "$userTable" (
 	"$idColumn"	INTEGER NOT NULL,
