@@ -33,13 +33,20 @@ class DatabaseNote {
   final int id;
   final int user_id;
   final String text;
+  final bool is_synced_with_cloud;
 
-  DatabaseNote({required this.id, required this.user_id, required this.text});
+  DatabaseNote(
+      {required this.id,
+      required this.user_id,
+      required this.text,
+      required this.is_synced_with_cloud});
 
   DatabaseNote.fromRaw(Map<String, Object?> map)
       : id = map[idColumn] as int,
         user_id = map[userIdColumn] as int,
-        text = map[textColumn] as String;
+        text = map[textColumn] as String,
+        is_synced_with_cloud =
+            map[isSyncedWithCloudIdColumn] as int == 1 ? true : false;
 
   @override
   bool operator ==(Object other) =>
@@ -48,12 +55,15 @@ class DatabaseNote {
           runtimeType == other.runtimeType &&
           id == other.id &&
           user_id == other.user_id &&
-          text == other.text;
+          text == other.text &&
+          is_synced_with_cloud == other.is_synced_with_cloud;
 
   @override
   String toString() {
-    return 'DatabaseNote{id: $id, user_id: $user_id, text: $text}';
+    return 'DatabaseNote{id: $id, user_id: $user_id, text: $text, is_synced_with_cloud: $is_synced_with_cloud}';
   }
 }
+
 const userIdColumn = 'user_id';
 const textColumn = 'text';
+const isSyncedWithCloudIdColumn = false;
