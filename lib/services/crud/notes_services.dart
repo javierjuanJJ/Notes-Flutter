@@ -67,6 +67,24 @@ class DatabaseNote {
 class NotesService {
   Database? _db;
 
+  Future<DatabaseNote> updateNote({required DatabaseNote note, required String text}) async {
+    final db = _getDatabaseOrThrow();
+    await getNote(id: note.id);
+
+    final updatesCount = await db.update(noteTable, {
+      textColumn : text,
+      isSyncedWithCloudIdColumn: 0
+    });
+
+    if (updatesCount == 0){
+      throw CouldNotUpdateNoteException();
+    }
+    else{
+      return await getNote(id: note.id);
+    }
+
+  }
+
   Future<Iterable<DatabaseNote>> getAllNotes() async {
     final db = _getDatabaseOrThrow();
     final createAccount = await db.query(noteTable);
