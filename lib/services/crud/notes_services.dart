@@ -67,6 +67,13 @@ class DatabaseNote {
 class NotesService {
   Database? _db;
 
+  Future<Iterable<DatabaseNote>> getAllNotes() async {
+    final db = _getDatabaseOrThrow();
+    final createAccount = await db.query(noteTable);
+
+    return createAccount.map((noteRow) => DatabaseNote.fromRaw(noteRow));
+  }
+
   Future<DatabaseNote> getNote({required int id}) async {
     final db = _getDatabaseOrThrow();
     final createAccount = await db.query(noteTable,
