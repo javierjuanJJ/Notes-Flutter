@@ -67,22 +67,19 @@ class DatabaseNote {
 class NotesService {
   Database? _db;
 
-  Future<DatabaseNote> updateNote({required DatabaseNote note, required String text}) async {
+  Future<DatabaseNote> updateNote(
+      {required DatabaseNote note, required String text}) async {
     final db = _getDatabaseOrThrow();
     await getNote(id: note.id);
 
-    final updatesCount = await db.update(noteTable, {
-      textColumn : text,
-      isSyncedWithCloudIdColumn: 0
-    });
+    final updatesCount = await db
+        .update(noteTable, {textColumn: text, isSyncedWithCloudIdColumn: 0});
 
-    if (updatesCount == 0){
+    if (updatesCount == 0) {
       throw CouldNotUpdateNoteException();
-    }
-    else{
+    } else {
       return await getNote(id: note.id);
     }
-
   }
 
   Future<Iterable<DatabaseNote>> getAllNotes() async {
@@ -94,8 +91,8 @@ class NotesService {
 
   Future<DatabaseNote> getNote({required int id}) async {
     final db = _getDatabaseOrThrow();
-    final createAccount = await db.query(noteTable,
-        limit: 1, where: '$idColumn = ?', whereArgs: [id]);
+    final createAccount = await db
+        .query(noteTable, limit: 1, where: '$idColumn = ?', whereArgs: [id]);
     if (createAccount.isEmpty) {
       throw CoiuldNotFindNoteException();
     }
@@ -109,8 +106,8 @@ class NotesService {
 
   Future<void> deleteNote({required int id}) async {
     final db = _getDatabaseOrThrow();
-    final deleteAccount = await
-        db.delete(noteTable, where: '$idColumn = ?', whereArgs: [id]);
+    final deleteAccount =
+        await db.delete(noteTable, where: '$idColumn = ?', whereArgs: [id]);
     if (deleteAccount != 1) {
       throw CouldNotDeleteNoteException();
     }
@@ -215,8 +212,9 @@ class NotesService {
   }
 }
 
-class CoiuldNotFindNoteException implements Exception {
-}
+class CouldNotUpdateNoteException implements Exception {}
+
+class CoiuldNotFindNoteException implements Exception {}
 
 class CouldNotDeleteNoteException implements Exception {}
 
