@@ -82,7 +82,12 @@ class _NotesViewState extends State<NotesView> {
                         itemCount: allNotes.length,
                         itemBuilder: (context, index) {
                           final note = allNotes[index];
-                          return Text(note.text);
+                          return Text(
+                            note.text,
+                            maxLines: 1,
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                          );
                         },
                       );
                     default:
