@@ -76,8 +76,7 @@ class NotesService {
   NotesService._sharedInstance();
   factory NotesService() => _shared;
 
-  final _noteStreamController =
-      StreamController<List<DatabaseNote>>.broadcast();
+  late final StreamController<List<DatabaseNote>> _noteStreamController;
 
   Stream<List<DatabaseNote>> get allNotes => _noteStreamController.stream;
 

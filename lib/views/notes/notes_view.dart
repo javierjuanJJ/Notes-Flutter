@@ -84,7 +84,6 @@ class _NotesViewState extends State<NotesView> {
                     case ConnectionState.waiting:
                     case ConnectionState.active:
                       return Text('Waiting for all notes');
-                      break;
                     default:
                       return CircularProgressIndicator();
                   }
