@@ -67,6 +67,20 @@ class DatabaseNote {
 class NotesService {
   Database? _db;
 
+  Future<int> deleteAllNotes() async {
+    final db = _getDatabaseOrThrow();
+    return await db.delete(noteTable);
+  }
+
+  Future<void> deleteNote({required int id}) async {
+    final db = _getDatabaseOrThrow();
+    final deleteAccount = await
+        db.delete(noteTable, where: '$idColumn = ?', whereArgs: [id]);
+    if (deleteAccount != 1) {
+      throw CouldNotDeleteNoteException();
+    }
+  }
+
   Future<DatabaseNote> createNote({required DatabaseUser owner}) async {
     final db = _getDatabaseOrThrow();
     final dbUser = await getUser(email: owner.email);
@@ -115,7 +129,7 @@ class NotesService {
   Future<void> deleteUser({required String email}) async {
     final db = _getDatabaseOrThrow();
     final deleteAccount = db.delete(userTable,
-        where: 'email = ?', whereArgs: [email.toLowerCase()]);
+        where: '$emailColumn = ?', whereArgs: [email.toLowerCase()]);
     if (deleteAccount != 1) {
       throw CouldNotDeleteUserException();
     }
@@ -165,6 +179,8 @@ class NotesService {
     }
   }
 }
+
+class CouldNotDeleteNoteException implements Exception {}
 
 class CoiuldNotFindUserException implements Exception {}
 
