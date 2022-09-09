@@ -73,7 +73,15 @@ class NotesService {
   List<DatabaseNote> _notes = [];
 
   static final NotesService _shared = NotesService._sharedInstance();
-  NotesService._sharedInstance();
+
+  NotesService._sharedInstance() {
+    _noteStreamController = StreamController<List<DatabaseNote>>.broadcast(
+      onListen: () {
+        _noteStreamController.sink.add(_notes);
+      },
+    );
+  }
+
   factory NotesService() => _shared;
 
   late final StreamController<List<DatabaseNote>> _noteStreamController;
@@ -247,7 +255,6 @@ class NotesService {
   }
 
   Future<void> close() async {
-
     final db = _db;
 
     if (db == null) {
