@@ -7,6 +7,7 @@ import 'package:notes/enums/menuAction.dart';
 import 'package:notes/main.dart';
 import 'package:notes/services/auth/auth_service.dart';
 import 'package:notes/services/crud/notes_services.dart';
+import 'package:notes/views/notes/notes_list_view.dart';
 
 class NotesView extends StatefulWidget {
   const NotesView({Key? key}) : super(key: key);
@@ -78,7 +79,12 @@ class _NotesViewState extends State<NotesView> {
                     case ConnectionState.waiting:
                     case ConnectionState.active:
                       final allNotes = snapshot.data as List<DatabaseNote>;
-
+                      return NotesListView(
+                        notes: allNotes,
+                        deleteNoteCallback: (note) async {
+                          await _notesService.deleteNote(id: note.id);
+                        },
+                      );
                     default:
                       return CircularProgressIndicator();
                   }
