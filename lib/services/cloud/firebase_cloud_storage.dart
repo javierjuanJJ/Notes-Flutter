@@ -35,4 +35,10 @@ class FirebaseCloudStorage {
       throw CouldNotGetAllNotesException();
     }
   }
+
+  Stream<Iterable<CloudNote>> allNotes({required String ownerUserId}) {
+    return notes.snapshots().map((event) => event.docs
+        .map((e) => CloudNote.fromSnapshot(e))
+        .where((element) => element.ownerUserId == ownerUserId));
+  }
 }
