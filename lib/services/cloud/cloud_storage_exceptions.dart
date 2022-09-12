@@ -1,7 +1,6 @@
-class CloudStorageException implements Exception{
+class CloudStorageException implements Exception {
   const CloudStorageException();
 }
-
 
 // C in CRUD
 class CouldNotCreateNoteException extends CloudStorageException {}

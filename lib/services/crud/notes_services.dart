@@ -90,15 +90,15 @@ class NotesService {
 
   late final StreamController<List<DatabaseNote>> _noteStreamController;
 
-  Stream<List<DatabaseNote>> get allNotes => _noteStreamController.stream.filter((note) {
-    final currentUser = _user;
-    if(currentUser != null){
-      return note.user_id == currentUser.id;
-    }
-    else{
-      throw UserShouldBeSetBeforeReadingAllNotes();
-    }
-  });
+  Stream<List<DatabaseNote>> get allNotes =>
+      _noteStreamController.stream.filter((note) {
+        final currentUser = _user;
+        if (currentUser != null) {
+          return note.user_id == currentUser.id;
+        } else {
+          throw UserShouldBeSetBeforeReadingAllNotes();
+        }
+      });
 
   Future<void> _cacheNotes() async {
     final allNotes = await getAllNotes();
@@ -220,11 +220,12 @@ class NotesService {
     return DatabaseUser.fromRaw(createAccount.first);
   }
 
-  Future<DatabaseUser> getOrCreateUser({required String email, bool setAsCurrentUser = true}) async {
+  Future<DatabaseUser> getOrCreateUser(
+      {required String email, bool setAsCurrentUser = true}) async {
     try {
       final createdUser = await getUser(email: email);
 
-      if (setAsCurrentUser){
+      if (setAsCurrentUser) {
         _user = createdUser;
       }
 
