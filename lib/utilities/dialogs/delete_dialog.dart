@@ -6,7 +6,6 @@ typedef DialogOptionBuilder<T> = Map<String, T?> Function();
 
 Future<bool> showDeleteDialog<T>({
   required BuildContext context,
-  required String title,
 }) async {
   return showGenericDialog<bool>(
     context: context,
