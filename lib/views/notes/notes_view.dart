@@ -78,18 +78,7 @@ class _NotesViewState extends State<NotesView> {
                     case ConnectionState.waiting:
                     case ConnectionState.active:
                       final allNotes = snapshot.data as List<DatabaseNote>;
-                      return ListView.builder(
-                        itemCount: allNotes.length,
-                        itemBuilder: (context, index) {
-                          final note = allNotes[index];
-                          return Text(
-                            note.text,
-                            maxLines: 1,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                          );
-                        },
-                      );
+
                     default:
                       return CircularProgressIndicator();
                   }
