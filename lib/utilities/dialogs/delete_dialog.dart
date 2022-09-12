@@ -8,7 +8,6 @@ Future<bool> showDeleteDialog<T>({
   required BuildContext context,
   required String title,
 }) async {
-
   return showGenericDialog<bool>(
     context: context,
     title: 'Delete',
@@ -18,6 +17,6 @@ Future<bool> showDeleteDialog<T>({
       'Cancel': true,
     },
   ).then(
-        (value) => value ?? false,
+    (value) => value ?? false,
   );
 }

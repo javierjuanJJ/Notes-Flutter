@@ -8,7 +8,6 @@ Future<bool> showLogOutDialog<T>({
   required BuildContext context,
   required String title,
 }) async {
-
   return showGenericDialog<bool>(
     context: context,
     title: 'Log Out',
@@ -18,6 +17,6 @@ Future<bool> showLogOutDialog<T>({
       'Cancel': true,
     },
   ).then(
-        (value) => value ?? false,
+    (value) => value ?? false,
   );
 }

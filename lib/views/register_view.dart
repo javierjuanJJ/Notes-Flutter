@@ -64,13 +64,15 @@ class _RegisterViewState extends State<RegisterView> {
 
                 Navigator.of(context).pushNamed(verifyEmailRoute);
               } on EmailAlreadyInUseAuthException {
-                await showErrorDialog(context: context, title: 'Email already in use');
+                await showErrorDialog(
+                    context: context, title: 'Email already in use');
               } on WeakPasswordAuthException {
                 await showErrorDialog(context: context, title: 'Weak password');
               } on InvalidEmailAuthException {
                 await showErrorDialog(context: context, title: 'Invalid email');
               } on GenericAuthException {
-                await showErrorDialog(context: context, title: 'Failed to register');
+                await showErrorDialog(
+                    context: context, title: 'Failed to register');
               }
             },
             child: const Text('Register'),

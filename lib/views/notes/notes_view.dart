@@ -36,7 +36,7 @@ class _NotesViewState extends State<NotesView> {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              Navigator.of(context).pushNamed(newNoteRoute);
+              Navigator.of(context).pushNamed(createUpdateNoteRoute);
             },
           ),
           PopupMenuButton<MenuAction>(
@@ -83,6 +83,12 @@ class _NotesViewState extends State<NotesView> {
                         notes: allNotes,
                         deleteNoteCallback: (note) async {
                           await _notesService.deleteNote(id: note.id);
+                        },
+                        OnTap: (DatabaseNote note) {
+                          Navigator.of(context).pushNamed(
+                            createUpdateNoteRoute,
+                            arguments: note,
+                          );
                         },
                       );
                     default:

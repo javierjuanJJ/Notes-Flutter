@@ -70,13 +70,17 @@ class _LoginViewState extends State<LoginView> {
                       verifyEmailRoute, (route) => false);
                 }
               } on UserNotFoundAuthException {
-                await showErrorDialog(context: context, title: 'User not found');
+                await showErrorDialog(
+                    context: context, title: 'User not found');
               } on WrongPasswordAuthException {
-                await showErrorDialog(context: context, title: 'Wrong password');
+                await showErrorDialog(
+                    context: context, title: 'Wrong password');
               } on GenericAuthException {
-                await showErrorDialog(context: context, title: 'Authentication error');
+                await showErrorDialog(
+                    context: context, title: 'Authentication error');
               } catch (e) {
-                await showErrorDialog(context: context, title: 'Error: ${e.toString()}');
+                await showErrorDialog(
+                    context: context, title: 'Error: ${e.toString()}');
               }
             },
             child: const Text('Login'),

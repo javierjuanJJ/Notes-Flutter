@@ -8,15 +8,12 @@ Future<void> showErrorDialog<T>({
   required BuildContext context,
   required String title,
 }) async {
-
   return showGenericDialog<bool>(
     context: context,
     title: 'An erroc ocurred',
     content: title,
-    optionsBuilder: () => {
-      'OK' : null
-    },
+    optionsBuilder: () => {'OK': null},
   ).then(
-        (value) => value ?? false,
+    (value) => value ?? false,
   );
 }
