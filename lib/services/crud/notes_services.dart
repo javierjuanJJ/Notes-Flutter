@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:notes/services/auth/auth_exceptions.dart';
 import 'package:notes/services/crud/crud_exceptions.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:notes/extensions/list/filters.dart';
 
 @immutable
 class DatabaseUser {
@@ -70,6 +72,8 @@ class DatabaseNote {
 class NotesService {
   Database? _db;
 
+  DatabaseUser? _user;
+
   List<DatabaseNote> _notes = [];
 
   static final NotesService _shared = NotesService._sharedInstance();
@@ -86,7 +90,15 @@ class NotesService {
 
   late final StreamController<List<DatabaseNote>> _noteStreamController;
 
-  Stream<List<DatabaseNote>> get allNotes => _noteStreamController.stream;
+  Stream<List<DatabaseNote>> get allNotes => _noteStreamController.stream.filter((note) {
+    final currentUser = _user;
+    if(currentUser != null){
+      return note.user_id == currentUser.id;
+    }
+    else{
+      throw UserShouldBeSetBeforeReadingAllNotes();
+    }
+  });
 
   Future<void> _cacheNotes() async {
     final allNotes = await getAllNotes();
@@ -100,8 +112,14 @@ class NotesService {
     final db = _getDatabaseOrThrow();
     await getNote(id: note.id);
 
-    final updatesCount = await db
-        .update(noteTable, {textColumn: text, isSyncedWithCloudIdColumn: 0});
+    final updatesCount = await db.update(
+        noteTable,
+        {
+          textColumn: text,
+          isSyncedWithCloudIdColumn: 0,
+        },
+        where: '$noteTable = ?',
+        whereArgs: [note.id]);
 
     if (updatesCount == 0) {
       throw CouldNotUpdateNoteException();
@@ -202,10 +220,15 @@ class NotesService {
     return DatabaseUser.fromRaw(createAccount.first);
   }
 
-  Future<DatabaseUser> getOrCreateUser({required String email}) async {
+  Future<DatabaseUser> getOrCreateUser({required String email, bool setAsCurrentUser = true}) async {
     try {
-      final user = await getUser(email: email);
-      return user;
+      final createdUser = await getUser(email: email);
+
+      if (setAsCurrentUser){
+        _user = createdUser;
+      }
+
+      return createdUser;
     } on CoiuldNotFindUserException {
       final user = await createUser(email: email);
       return user;
