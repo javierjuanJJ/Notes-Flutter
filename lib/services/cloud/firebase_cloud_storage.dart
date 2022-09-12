@@ -24,17 +24,13 @@ class FirebaseCloudStorage {
       return await notes
           .where(ownerUserIdFieldName, isEqualTo: ownerUserId)
           .get()
-          .then(
-              (value) => value.docs.map(
-                      (doc) {
+          .then((value) => value.docs.map((doc) {
                 return CloudNote(
                   documentId: doc.id,
                   ownerUserId: doc.data()[ownerUserIdFieldName] as String,
                   text: doc.data()[textFieldName] as String,
                 );
-              }
-              )
-      );
+              }));
     } catch (e) {
       throw CouldNotGetAllNotesException();
     }
