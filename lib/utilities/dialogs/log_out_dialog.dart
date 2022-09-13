@@ -4,7 +4,7 @@ import 'package:notes/utilities/dialogs/generic_dialog.dart';
 
 typedef DialogOptionBuilder<T> = Map<String, T?> Function();
 
-Future<bool> showLogOutDialog<T>({
+Future<bool> showLogOutDialog<T>( {
   required BuildContext context,
   required String title,
 }) async {

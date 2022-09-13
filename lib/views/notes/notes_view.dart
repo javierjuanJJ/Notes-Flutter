@@ -2,17 +2,16 @@ import 'dart:developer' as devtools show log;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' show ReadContext;
 import 'package:notes/constants/routes.dart';
 import 'package:notes/enums/menuAction.dart';
-import 'package:notes/main.dart';
 import 'package:notes/services/auth/auth_service.dart';
 import 'package:notes/services/auth/bloc/auth_bloc.dart';
 import 'package:notes/services/auth/bloc/auth_event.dart';
 import 'package:notes/services/cloud/cloud_note.dart';
 import 'package:notes/services/cloud/firebase_cloud_storage.dart';
+import 'package:notes/utilities/dialogs/log_out_dialog.dart';
 import 'package:notes/views/notes/notes_list_view.dart';
-
-import 'package:flutter_bloc/flutter_bloc.dart' show ReadContext;
 
 class NotesView extends StatefulWidget {
   const NotesView({Key? key}) : super(key: key);
@@ -43,21 +42,20 @@ class _NotesViewState extends State<NotesView> {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              Navigator.of(context).pushNamed(createUpdateNoteRoute);
+              Navigator.of(context).pushNamed(createOrUpdateNoteRoute);
             },
           ),
           PopupMenuButton<MenuAction>(
             onSelected: (value) async {
               switch (value) {
                 case MenuAction.logout:
-                  final dialog = await showLogOutDialog(context);
+                  final dialog =
+                      await showLogOutDialog(context: context, title: '');
 
                   if (dialog) {
-
                     context.read<AuthBloc>().add(
-                      const AuthEventLogOut(),
-                    );
-
+                          const AuthEventLogOut(),
+                        );
                   }
 
                   break;
@@ -93,7 +91,7 @@ class _NotesViewState extends State<NotesView> {
                           notes: allNotes,
                           onTap: (note) {
                             Navigator.of(context).pushNamed(
-                              createUpdateNoteRoute,
+                              createOrUpdateNoteRoute,
                               arguments: note,
                             );
                           },
