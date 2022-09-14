@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notes/constants/routes.dart';
+import 'package:notes/generated/l10n.dart';
 import 'package:notes/services/auth/auth_service.dart';
 import 'package:notes/services/auth/bloc/auth_bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notes/services/auth/bloc/auth_event.dart';
 
 class VerifyEmailView extends StatefulWidget {
@@ -18,33 +19,37 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Verify Email'),
+        title: Text(S.of(context).verify_email),
       ),
-      body: Column(
-        children: [
-          const Text(
-              "We've sent you an email confirmation. Please open it to verify your account."),
-          const Text(
-              "If you haven't received a verification email yet, press the button below. "),
-          TextButton(
-            onPressed: () {
-              context.read<AuthBloc>().add(
-                const AuthEventSendEmailVerification(),
-              );
-            },
-            child: Text('Send email verification'),
-          ),
-          TextButton(
-              onPressed: () async {
-                await AuthService.firebase().logOut();
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil(registerRoute, (route) => false);
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                S.of(context).verify_email_view_prompt,
+              ),
+            ),
+            TextButton(
+              onPressed: () {
                 context.read<AuthBloc>().add(
-                  const AuthEventLogOut(),
-                );
+                      const AuthEventSendEmailVerification(),
+                    );
               },
-              child: const Text('Restart'))
-        ],
+              child: Text(S.of(context).verify_email_send_email_verification),
+            ),
+            TextButton(
+                onPressed: () async {
+                  await AuthService.firebase().logOut();
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil(registerRoute, (route) => false);
+                  context.read<AuthBloc>().add(
+                        const AuthEventLogOut(),
+                      );
+                },
+                child: Text(S.of(context).restart))
+          ],
+        ),
       ),
     );
   }

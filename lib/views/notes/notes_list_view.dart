@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:notes/services/cloud/cloud_note.dart';
-import 'package:notes/services/crud/notes_services.dart';
 import 'package:notes/utilities/dialogs/delete_dialog.dart';
 
 typedef NoteCallback = void Function(CloudNote note);
@@ -13,12 +12,12 @@ class NotesListView extends StatelessWidget {
   final NoteCallback deleteNoteCallback;
   final NoteCallback onTap;
 
-  const NotesListView(
-      {Key? key,
-        required this.notes,
-        required this.deleteNoteCallback,
-        required this.onTap,})
-      : super(key: key);
+  const NotesListView({
+    Key? key,
+    required this.notes,
+    required this.deleteNoteCallback,
+    required this.onTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

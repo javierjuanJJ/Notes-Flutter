@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:notes/extensions/generics/get_arguments.dart';
+import 'package:notes/generated/l10n.dart';
 import 'package:notes/services/auth/auth_service.dart';
 import 'package:notes/services/cloud/cloud_note.dart';
 import 'package:notes/services/cloud/firebase_cloud_storage.dart';
@@ -100,7 +101,7 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('New Note'),
+        title: Text(S.of(context).note),
         actions: [
           IconButton(
             icon: const Icon(Icons.share),
@@ -125,8 +126,8 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
                 controller: _textController,
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
-                decoration: const InputDecoration(
-                    hintText: 'Start typing your note... '),
+                decoration: InputDecoration(
+                    hintText: S.of(context).start_typing_your_note),
               );
 
             default:
