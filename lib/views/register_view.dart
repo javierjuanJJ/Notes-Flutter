@@ -1,13 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:notes/constants/routes.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notes/services/auth/auth_exceptions.dart';
-import 'package:notes/services/auth/auth_service.dart';
-import 'package:notes/utilities/dialogs/error_dialog.dart';
 import 'package:notes/services/auth/bloc/auth_bloc.dart';
 import 'package:notes/services/auth/bloc/auth_event.dart';
 import 'package:notes/services/auth/bloc/auth_state.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:notes/utilities/dialogs/error_dialog.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
@@ -42,9 +40,11 @@ class _RegisterViewState extends State<RegisterView> {
           if (state.exception is WeakPasswordAuthException) {
             await showErrorDialog(context: context, title: 'Weak password');
           } else if (state.exception is EmailAlreadyInUseAuthException) {
-            await showErrorDialog(context: context, title: 'Email is already in use');
+            await showErrorDialog(
+                context: context, title: 'Email is already in use');
           } else if (state.exception is GenericAuthException) {
-            await showErrorDialog(context: context, title: 'Failed to register');
+            await showErrorDialog(
+                context: context, title: 'Failed to register');
           } else if (state.exception is InvalidEmailAuthException) {
             await showErrorDialog(context: context, title: 'Invalid email');
           }
@@ -54,8 +54,10 @@ class _RegisterViewState extends State<RegisterView> {
         appBar: AppBar(
           title: const Text('Register'),
         ),
-        body: Column(
-          children: [
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(children: [
+            const Text('Enter your email and password to see your notes!'),
             TextField(
               controller: _email,
               enableSuggestions: false,
@@ -74,28 +76,34 @@ class _RegisterViewState extends State<RegisterView> {
                 hintText: 'Enter your password here',
               ),
             ),
-            TextButton(
-              onPressed: () async {
-                final email = _email.text;
-                final password = _password.text;
-                context.read<AuthBloc>().add(
-                  AuthEventRegister(
-                    email,
-                    password,
+            Center(
+              child: Column(
+                children: [
+                  TextButton(
+                    onPressed: () async {
+                      final email = _email.text;
+                      final password = _password.text;
+                      context.read<AuthBloc>().add(
+                            AuthEventRegister(
+                              email,
+                              password,
+                            ),
+                          );
+                    },
+                    child: const Text('Register'),
                   ),
-                );
-              },
-              child: const Text('Register'),
+                  TextButton(
+                    onPressed: () {
+                      context.read<AuthBloc>().add(
+                            const AuthEventLogOut(),
+                          );
+                    },
+                    child: const Text('Already registered? Login here!'),
+                  ),
+                ],
+              ),
             ),
-            TextButton(
-              onPressed: () {
-                context.read<AuthBloc>().add(
-                  const AuthEventLogOut(),
-                );
-              },
-              child: const Text('Already registered? Login here!'),
-            )
-          ],
+          ]),
         ),
       ),
     );
