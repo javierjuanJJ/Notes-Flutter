@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notes/constants/routes.dart';
+import 'package:notes/generated/l10n.dart';
 import 'package:notes/helpers/loading/loading_screen.dart';
 import 'package:notes/services/auth/bloc/auth_bloc.dart';
 import 'package:notes/services/auth/bloc/auth_event.dart';
@@ -12,11 +13,14 @@ import 'package:notes/views/notes/create_update_note_view.dart';
 import 'package:notes/views/notes/notes_view.dart';
 import 'package:notes/views/register_view.dart';
 import 'package:notes/views/verify_email_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MaterialApp(
+      supportedLocales: AppLocalizationDelegate.supportedLocales,
+      localizationsDelegates: AppLocalizationDelegate.localizationsDelegates,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
