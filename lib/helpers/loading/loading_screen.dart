@@ -84,4 +84,10 @@ class LoadingScreen {
       },
     );
   }
+
+  void hide() {
+    controller?.close();
+    controller = null;
+  }
+
 }
