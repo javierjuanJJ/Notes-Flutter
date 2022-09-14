@@ -90,4 +90,18 @@ class LoadingScreen {
     controller = null;
   }
 
+  void show({
+    required BuildContext context,
+    required String text,
+  }) {
+    if (controller?.update(text) ?? false) {
+      return;
+    } else {
+      controller = showOverlay(
+        context: context,
+        text: text,
+      );
+    }
+  }
+
 }
