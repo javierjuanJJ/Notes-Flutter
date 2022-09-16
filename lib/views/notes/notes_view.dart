@@ -1,6 +1,3 @@
-import 'dart:developer' as devtools show log;
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show ReadContext;
 import 'package:notes/constants/routes.dart';
@@ -56,74 +53,58 @@ class _NotesViewState extends State<NotesView> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add),
             onPressed: () {
               Navigator.of(context).pushNamed(createOrUpdateNoteRoute);
             },
+            icon: const Icon(Icons.add),
           ),
           PopupMenuButton<MenuAction>(
             onSelected: (value) async {
               switch (value) {
                 case MenuAction.logout:
-                  final dialog =
+                  final shouldLogout =
                       await showLogOutDialog(context: context, title: '');
-
-                  if (dialog) {
+                  if (shouldLogout) {
                     context.read<AuthBloc>().add(
                           const AuthEventLogOut(),
                         );
                   }
-
-                  break;
               }
-              devtools.log(value.toString());
-              print(value);
             },
             itemBuilder: (context) {
               return [
                 PopupMenuItem<MenuAction>(
                   value: MenuAction.logout,
                   child: Text(S.of(context).logout_button),
-                )
+                ),
               ];
             },
           )
         ],
       ),
       body: StreamBuilder(
-        // future: _notesService.getOrCreateUser(email: userEmail),
+        stream: _notesService.allNotes(ownerUserId: userId),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              return StreamBuilder(
-                stream: _notesService.allNotes(ownerUserId: userId),
-                builder: (context, snapshot) {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.waiting:
-                    case ConnectionState.active:
-                      if (snapshot.hasData) {
-                        final allNotes = snapshot.data as Iterable<CloudNote>;
-                        return NotesListView(
-                          notes: allNotes,
-                          onTap: (note) {
-                            Navigator.of(context).pushNamed(
-                              createOrUpdateNoteRoute,
-                              arguments: note,
-                            );
-                          },
-                          deleteNoteCallback: (CloudNote note) async {
-                            await _notesService.deleteNote(
-                                documentId: note.documentId);
-                          },
-                        );
-                      } else {
-                        return const CircularProgressIndicator();
-                      }
-                    default:
-                      return CircularProgressIndicator();
-                  }
-                },
-              );
+            case ConnectionState.waiting:
+            case ConnectionState.active:
+              if (snapshot.hasData) {
+                final allNotes = snapshot.data as Iterable<CloudNote>;
+                return NotesListView(
+                  notes: allNotes,
+                  deleteNoteCallback: (note) async {
+                    await _notesService.deleteNote(documentId: note.documentId);
+                  },
+                  onTap: (note) {
+                    Navigator.of(context).pushNamed(
+                      createOrUpdateNoteRoute,
+                      arguments: note,
+                    );
+                  },
+                );
+              } else {
+                return const CircularProgressIndicator();
+              }
             default:
               return const CircularProgressIndicator();
           }
